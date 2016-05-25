@@ -50,7 +50,8 @@ function yandexTranslate (robot) {
       .get()(response);
 
     function response (err, res, body) {
-      var parsed = parse(body).lang.split('-');
+      var parsed = parse(body);
+      var parseLang = parsed.lang.split('-');
       if (parsed) {
         command.send(['from ' + parseLang[0] + ' to ' + parseLang[1] + ':', '> ' + parsed.text].join('\n'));
       }
