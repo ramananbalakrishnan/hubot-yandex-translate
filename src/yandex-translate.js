@@ -1,3 +1,14 @@
+// Description:
+//   Allows Hubot to translate messages using the Yandex Translate API
+//
+// Configuration
+//   YANDEX_TRANSLATE_API_KEY - Your Yandex Translate API key
+//
+// Commands:
+//   hubot translate <message> - translate message using the Yandex Translate API
+//   hubot translate [from-to] <message> - e.g. "hubot translate fr-en merci"
+//   hubot translate [to] <message> - e.g. "hubot translate fr thanks"
+
 'use strict';
 
 var languages = require('../lib/languages');
@@ -10,7 +21,7 @@ function getCode (language, basic) {
 function yandexTranslate (robot) {
   var choices = languages.sort().join('|');
   var pattern = '' +
-    '(?: traducir|traduc[ie]|translate|tr|t)' +
+    '(?: translate)' +
     '(?: (' + choices + '))?' +
     '(?:[\s-]+(' + choices + '))?' +
     '(.*)';
@@ -39,9 +50,9 @@ function yandexTranslate (robot) {
       .get()(response);
 
     function response (err, res, body) {
-      var parsed = parse(body);
+      var parsed = parse(body).lang.split('-');
       if (parsed) {
-        command.send('HODOR hodor. ' + parsed.text);
+        command.send(['from ' + parseLang[0] + ' to ' + parseLang[1] + ':', '> ' + parsed.text].join('\n'));
       }
     }
   }
